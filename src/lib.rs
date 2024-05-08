@@ -38,7 +38,7 @@ mod logger;
 
 #[derive(Debug)]
 pub struct Tetris {
-    running: std::sync::atomic::AtomicBool,
+    running: bool,
     current_piece: Piece,
     loop_duration: Duration,
     gameovered: bool,
@@ -56,14 +56,15 @@ impl Tetris {
                 Some(t) => t,
                 None => {
                     #[cfg(feature = "test_wallkick")]
-                    let current_piece = Piece::new(Tetromino::new(base::tetromino::TetrominoKind::J));
+                    let current_piece =
+                        Piece::new(Tetromino::new(base::tetromino::TetrominoKind::J));
 
                     #[cfg(not(feature = "test_wallkick"))]
                     let current_piece = Piece::new(next_queue::take_tetromino());
                     TETRIS
                         .set(Self {
                             current_piece,
-                            running: std::sync::atomic::AtomicBool::new(false),
+                            running: false,
                             loop_duration: Self::get_loop_duration(120),
                             helping_on_gameovered: false,
                             gameovered: false,
@@ -100,12 +101,11 @@ impl Tetris {
     }
 
     fn set_running(&mut self, value: bool) {
-        self.running
-            .store(value, std::sync::atomic::Ordering::Relaxed)
+        self.running = value
     }
 
     fn running(&self) -> bool {
-        self.running.load(std::sync::atomic::Ordering::Relaxed)
+        self.running
     }
 
     fn run_loop(&mut self) {
@@ -119,10 +119,10 @@ impl Tetris {
                     + &" [r]estart?".with_fg(TetrominoColor::Red.to_id());
                 if self.helping_on_gameovered {
                     play::render(self.reseted);
-                    self.helping_on_gameovered =false;
+                    self.helping_on_gameovered = false;
                 }
                 draw::render(s)
-            } else {
+            } else if !self.helping {
                 self.process();
                 next_queue::render();
                 play::render(self.reseted);
@@ -274,6 +274,9 @@ impl Tetris {
     }
 
     fn reset(&mut self) {
+        if !self.gameovered || self.helping_on_gameovered {
+            return;
+        }
         play::reset();
         self.current_piece = Piece::new(next_queue::take_tetromino());
         #[cfg(feature = "test_wallkick")]
@@ -299,7 +302,6 @@ impl Tetris {
 
 #[cfg(feature = "test_wallkick")]
 fn preload_ground() {
-
     let mut map_file_path = std::env::current_dir().unwrap();
     map_file_path.push("tetris.map");
     let file_path = map_file_path.clone();

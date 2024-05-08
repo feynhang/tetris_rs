@@ -95,9 +95,7 @@ fn hold() {
 }
 
 fn reset() {
-    if Tetris::instance().gameovered {
-        Tetris::instance().reset();
-    }
+    Tetris::instance().reset();
 }
 
 fn help() {
