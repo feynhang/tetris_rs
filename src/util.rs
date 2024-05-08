@@ -1,9 +1,6 @@
-use std::{
-    path::PathBuf,
-    time::{Duration, Instant},
-};
+use std::time::{Duration, Instant};
 
-use rand::{rngs::ThreadRng, thread_rng, Rng};
+use rand::{thread_rng, Rng};
 
 pub fn timer(dur: Duration) -> bool {
     static mut START: Option<Instant> = None;
@@ -57,30 +54,19 @@ pub fn rand_in_range(range: std::ops::Range<usize>) -> usize {
     thread_rng().gen_range(range)
 }
 
-#[cfg(windows)]
-const SEP: char = '\\';
-#[cfg(target_os = "linux")]
-const SEP: char = '/';
 
-pub fn bin_path_string() -> String {
-    std::env::args().next().unwrap()
-}
+// #[cfg(feature = "with_log")]
+// pub fn src_path() -> std::path::PathBuf {
+//     let mut project_dir = project_path();
+//     project_dir.push("src");
+//     project_dir
+// }
 
-pub fn bin_dir_path() -> PathBuf {
-    let exec_path_str = bin_path_string();
-    let i = exec_path_str.rfind(SEP).unwrap();
-    exec_path_str[0..i].parse().unwrap()
-}
-
-pub fn src_path() -> PathBuf {
-    let mut project_dir = project_path();
-    project_dir.push("src");
-    project_dir
-}
-
-pub fn project_path() -> PathBuf {
-    let exec_path_str = bin_path_string();
-    exec_path_str[0..exec_path_str.find("target").unwrap()]
-        .parse()
-        .unwrap()
-}
+// #[cfg(feature = "with_log")]
+// pub fn project_path() -> std::path::PathBuf {
+//     let exe_dir = std::env::current_dir().unwrap();
+//     let exe_dir_s = exe_dir.to_str().unwrap();
+//     exe_dir_s[0..exe_dir_s.find("target").unwrap()]
+//         .parse()
+//         .unwrap()
+// }

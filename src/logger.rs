@@ -64,7 +64,7 @@ where
 }
 
 fn try_create_log_file(file_name: Option<&'static str>) -> Result<PathBuf, std::io::Error> {
-    let mut path = util::bin_dir_path();
+    let mut path = std::env::current_dir().unwrap();
     path.push("log");
     if !path.exists() {
         fs::create_dir(&path)?;

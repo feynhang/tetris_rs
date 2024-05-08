@@ -1,7 +1,7 @@
 use std::ops::{Add, AddAssign, Sub};
 
 use crate::{
-    const_vals::BLANK,
+    const_vals::DOUBLE_SPACE,
     term::{TermColorful, CSI},
 };
 
@@ -123,7 +123,7 @@ impl Point {
         let s_blank = if let Some(blank) = blank_optional {
             blank
         } else {
-            BLANK
+            DOUBLE_SPACE
         };
         for (y, cols) in matrix.iter().enumerate() {
             for (x, cell) in cols.iter().enumerate() {
@@ -134,7 +134,7 @@ impl Point {
                 let point_state_string = match *cell {
                     PointState::Empty => s_blank.to_owned(),
                     PointState::Color(color) => {
-                        let color_str = BLANK.with_bg(color.to_id());
+                        let color_str = DOUBLE_SPACE.with_bg(color.to_id());
                         if is_hold {
                             Point::new(0, -1).to_moving_string() + &color_str
                         } else {

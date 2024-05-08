@@ -1,8 +1,8 @@
 use crate::{base::point::Point, window::Window};
-
-pub(crate) const BLANK: &str = "  ";
+pub(crate) const WHITESPACE: &str = " ";
+pub(crate) const DOUBLE_SPACE: &str = "  ";
 // pub const FRAME_BLANK: &str = "\u{30FB}";
-pub(crate) const FRAME_BLANK: &str = BLANK;
+pub(crate) const FRAME_BLANK: &str = DOUBLE_SPACE;
 // pub const FRAME_BLANK: &str = "·";
 pub(crate) const NUM_NEXTS_COLS: usize = 6;
 pub(crate) const NUM_NEXTS_ROWS: usize = 15;

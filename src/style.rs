@@ -13,39 +13,42 @@
 //     | U+257x |    ╰   |    ╱   |    ╲   |    ╳   |   ╴    |   ╵    |   ╶    |   ╷    |   ╸    |   ╹    |   ╺    |   ╻    |   ╼    |   ╽    |   ╾    |   ╿    |
 */
 
-const WHITESPACE: &str = " ";
 
 const SINGLE_LINE: StyleData = StyleData {
-    top_left: "┌",
+    top_left: " ┌",
     top_right: "┐",
-    bottom_left: "└",
+    bottom_left: " └",
     bottom_right: "┘",
-    vertical_bar: "│",
-    dash: "──",
+    right_v_dash: "│",
+    left_v_dash: " │",
+    h_dash: "──",
 };
 const DOUBLE_LINE: StyleData = StyleData {
-    top_left: "╔",
+    top_left: " ╔",
     top_right: "╗",
-    bottom_left: "╚",
+    bottom_left: " ╚",
     bottom_right: "╝",
-    vertical_bar: "║",
-    dash: "══",
+    right_v_dash: "║",
+    left_v_dash: " ║",
+    h_dash: "══",
 };
 const THICKER_LINE: StyleData = StyleData {
-    top_left: "┏",
+    top_left: " ┏",
     top_right: "┓",
-    bottom_left: "┗",
+    bottom_left: " ┗",
     bottom_right: "┛",
-    vertical_bar: "┃",
-    dash: "━━",
+    right_v_dash: "┃",
+    left_v_dash: " ┃",
+    h_dash: "━━",
 };
 const ROUNDED_LINE: StyleData = StyleData {
-    top_left: "╭",
+    top_left: " ╭",
     top_right: "╮",
-    bottom_left: "╰",
+    bottom_left: " ╰",
     bottom_right: "╯",
-    vertical_bar: "│",
-    dash: "──",
+    right_v_dash: "│",
+    left_v_dash: " │",
+    h_dash: "──",
 };
 
 ///`Style1`: Default style which using single line: ┌ ┐ │ └ ┘ ──
@@ -74,32 +77,32 @@ impl BorderStyle {
         }
     }
 
-    pub(crate) fn top_left(&self) -> String {
-        WHITESPACE.to_owned() + self.data().top_left
+    pub(crate) fn top_left(&self) -> &str {
+        self.data().top_left
     }
 
-    pub(crate) fn bottom_left(&self) -> String {
-        WHITESPACE.to_owned() + self.data().bottom_left
+    pub(crate) fn bottom_left(&self) -> &str {
+        self.data().bottom_left
     }
 
-    pub(crate) fn top_right(&self) -> String {
-        self.data().top_right.to_owned()
+    pub(crate) fn top_right(&self) -> &str {
+        self.data().top_right
     }
 
-    pub(crate) fn bottom_right(&self) -> String {
-        self.data().bottom_right.to_owned()
+    pub(crate) fn bottom_right(&self) -> &str {
+        self.data().bottom_right
     }
 
-    pub(crate) fn left_vertical_bar(&self) -> String {
-        WHITESPACE.to_owned() + self.data().vertical_bar
+    pub(crate) fn left_v_dash(&self) -> &str {
+        self.data().left_v_dash
     }
 
-    pub(crate) fn right_vertical_bar(&self) -> String {
-        self.data().vertical_bar.to_owned()
+    pub(crate) fn right_v_dash(&self) -> &str {
+        self.data().right_v_dash
     }
 
-    pub(crate) fn dash(&self) -> String {
-        self.data().dash.to_owned()
+    pub(crate) fn h_dash(&self) -> &str {
+        self.data().h_dash
     }
 }
 
@@ -109,6 +112,24 @@ pub(crate) struct StyleData {
     pub top_right: &'static str,
     pub bottom_left: &'static str,
     pub bottom_right: &'static str,
-    pub vertical_bar: &'static str,
-    pub dash: &'static str,
+    pub right_v_dash: &'static str,
+    pub left_v_dash: &'static str,
+    pub h_dash: &'static str,
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::style::{DOUBLE_LINE, ROUNDED_LINE, SINGLE_LINE, THICKER_LINE};
+
+    #[test]
+    fn test_style_size() {
+        println!("single line size: top_left = {}, top_right = {}, bottom_left = {}, bottom_right = {}, v_dash = {}, h_dash = {}",  
+        SINGLE_LINE.top_left.len(), SINGLE_LINE.top_right.len(), SINGLE_LINE.bottom_left.len(), SINGLE_LINE.bottom_right.len(), SINGLE_LINE.right_v_dash.len(), SINGLE_LINE.h_dash.len());
+        println!("double line size: top_left = {}, top_right = {}, bottom_left = {}, bottom_right = {}, v_dash = {}, h_dash = {}",  
+        DOUBLE_LINE.top_left.len(), DOUBLE_LINE.top_right.len(), DOUBLE_LINE.bottom_left.len(), DOUBLE_LINE.bottom_right.len(), DOUBLE_LINE.right_v_dash.len(), DOUBLE_LINE.h_dash.len());
+        println!("thicker line size: top_left = {}, top_right = {}, bottom_left = {}, bottom_right = {}, v_dash = {}, h_dash = {}",  
+        THICKER_LINE.top_left.len(), THICKER_LINE.top_right.len(), THICKER_LINE.bottom_left.len(), THICKER_LINE.bottom_right.len(), THICKER_LINE.right_v_dash.len(), THICKER_LINE.h_dash.len());
+        println!("rounded line size: top_left = {}, top_right = {}, bottom_left = {}, bottom_right = {}, v_dash = {}, h_dash = {}",  
+        ROUNDED_LINE.top_left.len(), ROUNDED_LINE.top_right.len(), ROUNDED_LINE.bottom_left.len(), ROUNDED_LINE.bottom_right.len(), ROUNDED_LINE.right_v_dash.len(), ROUNDED_LINE.h_dash.len());
+    }
 }

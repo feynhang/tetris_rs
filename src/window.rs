@@ -1,4 +1,8 @@
-use crate::{base::point::Point, const_vals::BLANK, style::BorderStyle};
+use crate::{
+    base::point::Point,
+    const_vals::{DOUBLE_SPACE, WHITESPACE},
+    style::BorderStyle,
+};
 
 static mut BORDER_STYLE: BorderStyle = BorderStyle::SingleLine;
 
@@ -30,11 +34,33 @@ impl Window {
             end: Point::new_const(height - 1, width - 1),
         }
     }
+
+    pub(crate) fn composite_empty(&self) -> String {
+        let mut ret = String::with_capacity(64);
+        for r in 0..=self.end.row {
+            ret.push_str(&self.start.add_row_offset(r).to_moving_string());
+            for c in 0..=self.end.col {
+                let symbol = if r == 0 || r == self.end.row {
+                    if c == 0 {
+                        DOUBLE_SPACE
+                    } else if c == self.end.col {
+                        WHITESPACE
+                    } else {
+                        DOUBLE_SPACE
+                    }
+                } else {
+                    DOUBLE_SPACE
+                };
+                ret.push_str(symbol);
+            }
+        }
+        ret
+    }
 }
 
 impl std::fmt::Display for Window {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let mut ret = String::with_capacity(256);
+        let mut ret = String::with_capacity(1024);
         let style = border_style();
         for r in 0..=self.end.row {
             ret.push_str(&self.start.add_row_offset(r).to_moving_string());
@@ -45,7 +71,7 @@ impl std::fmt::Display for Window {
                     } else if c == self.end.col {
                         style.top_right()
                     } else {
-                        style.dash()
+                        style.h_dash()
                     }
                 } else if r == self.end.row {
                     if c == 0 {
@@ -53,25 +79,26 @@ impl std::fmt::Display for Window {
                     } else if c == self.end.col {
                         style.bottom_right()
                     } else {
-                        style.dash()
+                        style.h_dash()
                     }
                 } else if c == 0 {
-                    style.left_vertical_bar()
+                    style.left_v_dash()
                 } else if c == self.end.col {
-                    style.right_vertical_bar()
+                    style.right_v_dash()
                 } else {
-                    BLANK.to_owned()
+                    DOUBLE_SPACE
                 };
-                ret.push_str(&symbol);
+                ret.push_str(symbol);
             }
         }
 
-        ret = ret
-            + &self
+        ret.push_str(
+            &(self
                 .start
                 .add_col_offset(((self.end.col + 1) * 2 - self.title.len() as i16) / 2)
                 .to_moving_string()
-            + self.title;
+                + self.title),
+        );
         write!(f, "{}", ret)
     }
 }

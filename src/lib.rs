@@ -17,7 +17,6 @@ use term::TermColorful;
 
 use crate::fields::hold_chamber;
 
-#[allow(unused)]
 mod util;
 
 /// base types
@@ -38,15 +37,13 @@ pub(crate) mod window;
 #[cfg(feature = "with_log")]
 mod logger;
 
-#[allow(unused)]
-mod tetris_error;
-
 #[derive(Debug)]
 pub struct Tetris {
     running: std::sync::atomic::AtomicBool,
     current_piece: Piece,
     loop_duration: Duration,
     gameovered: bool,
+    helping_on_gameovered: bool,
     helping: bool,
     reseted: bool,
     listener_handle: Option<std::thread::JoinHandle<()>>,
@@ -60,15 +57,17 @@ impl Tetris {
                 Some(t) => t,
                 None => {
                     #[cfg(feature = "test_wallkick")]
-                    let curr_piece = Piece::new(Tetromino::new(tetromino::TetrominoKind::J));
+                    let current_piece = Piece::new(Tetromino::new(base::tetromino::TetrominoKind::J));
 
                     #[cfg(not(feature = "test_wallkick"))]
+                    let current_piece = Piece::new(next_queue::take_tetromino());
                     // let tetro = nexts.take_tetromino();
                     TETRIS
                         .set(Self {
-                            current_piece: Piece::new(next_queue::take_tetromino()),
+                            current_piece,
                             running: std::sync::atomic::AtomicBool::new(false),
                             loop_duration: Self::get_loop_duration(120),
+                            helping_on_gameovered: false,
                             gameovered: false,
                             reseted: false,
                             helping: false,
@@ -120,14 +119,11 @@ impl Tetris {
                     + &" Game Over!".with_fg(TetrominoColor::Red.to_id())
                     + &RESTART_TIP_POINT.to_moving_string()
                     + &" [r]estart?".with_fg(TetrominoColor::Red.to_id());
-                #[cfg(feature = "with_log")]
-                crate::logger::log_to_file(
-                    format_args!("gameover content len = {}", s.len()),
-                    Some("string_lens"),
-                );
+                if self.helping_on_gameovered {
+                    play::render(self.reseted);
+                    self.helping_on_gameovered =false;
+                }
                 draw::render(s)
-            } else if self.helping {
-                draw::render_help();
             } else {
                 self.process();
                 next_queue::render();
@@ -135,6 +131,13 @@ impl Tetris {
                 hold_chamber::render();
                 status::render_score_datas();
                 status::render_fps(fps);
+            }
+            if self.helping {
+                if self.gameovered {
+                    draw::render(GAMEOVER_WINDOW.composite_empty());
+                    self.helping_on_gameovered = true;
+                }
+                draw::render_help();
             }
             term::stdout().flush().unwrap();
             fps = util::fps_count();
@@ -151,7 +154,7 @@ impl Tetris {
             if self.current_piece.locking() {
                 self.current_piece.merge_to_matrix(play::playfield());
                 self.clear_line();
-                
+
                 let t = next_queue::take_tetromino();
                 if !self.try_set_current_piece(t) {
                     return;
@@ -272,16 +275,13 @@ impl Tetris {
     fn help(&mut self) {
         self.helping = !self.helping;
         self.reseted = !self.helping;
-        // if !self.helping {
-        //     TetrisZone::clear_buffer();
-        // }
     }
 
     fn reset(&mut self) {
         play::reset();
         self.current_piece = Piece::new(next_queue::take_tetromino());
         #[cfg(feature = "test_wallkick")]
-        Self::preload_ground();
+        preload_ground();
         hold_chamber::reset();
         status::reset();
         self.gameovered = false;
@@ -303,12 +303,13 @@ impl Tetris {
 
 #[cfg(feature = "test_wallkick")]
 fn preload_ground() {
-    let mut map_file_path = util::bin_dir_path();
+
+    let mut map_file_path = std::env::current_dir().unwrap();
     map_file_path.push("tetris.map");
     let file_path = map_file_path.clone();
     if let Ok(f) = std::fs::File::open(file_path) {
         let mut bufreader = std::io::BufReader::new(f);
-        for row in playground().iter_mut().take(20).rev() {
+        for row in crate::fields::play::playfield().iter_mut().take(20).rev() {
             let mut line = String::with_capacity(10);
             std::io::BufRead::read_line(&mut bufreader, &mut line).unwrap();
             for (i, cell) in row.iter_mut().enumerate() {
