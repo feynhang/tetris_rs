@@ -14,7 +14,6 @@ pub(crate) type MatrixSlice<'a, const SIZE_COLS: usize> = &'a [Columns<SIZE_COLS
 pub(crate) type MutMatrixSlice<'a, const SIZE_COLS: usize> = &'a mut [Columns<SIZE_COLS>];
 
 pub(crate) type GameMatrix = Matrix<NUM_PLAYGROUND_ROWS, NUM_PLAYGROUND_COLS>;
-// pub(crate) type MutGameMatrixSlice<'a> = MutMatrixSlice<'a, NUM_COLS>;
 
 pub(crate) const fn default<const SIZE_ROWS: usize, const SIZE_COLS: usize>(
     point_state: PointState,

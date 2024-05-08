@@ -57,7 +57,6 @@ impl Offset {
 }
 
 impl Point {
-    // pub(crate) const ORIGIN: Point = Point::new_const(0, 0);
 
     pub(crate) fn new(row: i16, col: i16) -> Self {
         Self { row, col }
@@ -145,9 +144,6 @@ impl Point {
                     PointState::Uninit => continue,
                 };
                 let dest_point = self.add_then_b2c(matrix.len() as i16 - y as i16 - 1, x as i16);
-                // if is_hold {
-                //     dest_point = dest_point.add_col_offset(-1);
-                // }
                 ret.push_str(&(dest_point.to_moving_string() + &point_state_string));
             }
         }

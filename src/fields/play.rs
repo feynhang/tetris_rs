@@ -46,11 +46,11 @@ pub(crate) fn current_frame() -> &'static mut GameMatrix {
 
 pub(crate) fn update_frame(piece: &Piece) {
     sync_frame_to_playground();
-    // Normal piece
+    // update color piece to current frame
     piece.merge_to_matrix(current_frame());
     let mut ghost = piece.clone();
     ghost.set_status(PieceState::Ghost);
-    // Shadow piece
+    // update ghost piece to current frame
     while ghost.down() {}
     ghost.merge_to_matrix(current_frame());
 }

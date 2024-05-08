@@ -75,7 +75,7 @@ pub(crate) fn render() {
         .merge_to_matrix(&mut nexts_ground);
         y_ccs = y_ccs.saturating_sub(3);
     }
-    let content = crate::const_vals::NEXTS_INIT_POINT.composite_matrix(
+    let content = crate::const_vals::NEXT_INIT_POINT.composite_matrix(
         &nexts_ground,
         unsafe { BUFFER },
         None,

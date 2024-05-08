@@ -1,16 +1,13 @@
 #![allow(unused_assignments)]
 use std::{io::Write, sync::OnceLock, time::Duration};
 
-// #[cfg(feature = "with_log")]
-// use std::time::Instant;
-
 use base::{
     piece::Piece,
     point::PointState,
     tetromino::{TetroState, Tetromino, TetrominoColor},
 };
 
-use const_vals::{GAMEOVER_POINT, GAMEOVER_WINDOW, NUM_PLAYGROUND_ROWS, RESTART_TIP_POINT};
+use const_vals::{GAMEOVER_TEXT_POINT, GAMEOVER_WINDOW, NUM_PLAYGROUND_ROWS, RESTART_TIP_POINT};
 use fields::{info, next_queue, play, status};
 use style::BorderStyle;
 use term::TermColorful;
@@ -23,17 +20,19 @@ mod util;
 pub(crate) mod base;
 /// render
 pub(crate) mod draw;
-pub(crate) mod fields;
+/// simple border styles
 pub mod style;
+
 /// terminal control
 pub(crate) mod term;
-// #[allow(unused)]
+
+/// most of the constants that can be modified as needed
 pub(crate) mod const_vals;
 /// game control
 pub(crate) mod control;
-pub(crate) mod window;
 
-#[allow(unused)]
+/// hold chamber, status, play field, next queue field and help tip field
+pub(crate) mod fields;
 #[cfg(feature = "with_log")]
 mod logger;
 
@@ -61,7 +60,6 @@ impl Tetris {
 
                     #[cfg(not(feature = "test_wallkick"))]
                     let current_piece = Piece::new(next_queue::take_tetromino());
-                    // let tetro = nexts.take_tetromino();
                     TETRIS
                         .set(Self {
                             current_piece,
@@ -86,7 +84,7 @@ impl Tetris {
     }
 
     pub fn set_border_style(&mut self, border_style: BorderStyle) -> &mut Self {
-        window::set_border_style(border_style);
+        base::window::set_border_style(border_style);
         self
     }
 
@@ -115,7 +113,7 @@ impl Tetris {
         while self.running() {
             if self.gameovered {
                 let s: String = GAMEOVER_WINDOW.to_string()
-                    + &GAMEOVER_POINT.to_moving_string()
+                    + &GAMEOVER_TEXT_POINT.to_moving_string()
                     + &" Game Over!".with_fg(TetrominoColor::Red.to_id())
                     + &RESTART_TIP_POINT.to_moving_string()
                     + &" [r]estart?".with_fg(TetrominoColor::Red.to_id());
@@ -259,8 +257,6 @@ impl Tetris {
             }
             if full {
                 play::remove_and_push_to_playground(y);
-                // #[cfg(feature = "with_log")]
-                // logger::log_to_file(format_args!("into full, before y sub 1, current y = {}", y));
                 line_count += 1;
             } else {
                 y += 1

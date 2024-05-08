@@ -1,12 +1,12 @@
 use crate::{
     base::point::{Offset, Point, PointState},
-    const_vals::{NUM_PLAYGROUND_COLS, NUM_PLAYGROUND_ROWS, TETRIS_PIECE_INIT_POINT},
+    const_vals::{NUM_PLAYGROUND_COLS, NUM_PLAYGROUND_ROWS, PIECE_INIT_POINT},
     fields::play,
 };
 
 const NUM_STATES: usize = 4;
 const NUM_DATAS: usize = 4;
-/// Partial tetromino datas except origin (which x = 0, y = 0)
+/// Represent partial tetromino datas except zero offset (which x = 0, y = 0)
 pub(crate) type PartData = [Offset; 3];
 pub(crate) type TetroDatas = [PartData; NUM_STATES];
 pub(crate) type TetroKickOffsets = [Offset; 5];
@@ -213,13 +213,7 @@ impl std::ops::Add<Self> for TetroState {
     }
 }
 
-// impl std::ops::AddAssign<TetroState> for TetroState {
-//     fn add_assign(&mut self, rhs: TetroState) {
-//         *self = *self + rhs;
-//     }
-// }
 
-// #[allow(unused)]
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub(crate) enum TetrominoColor {
     Cyan = 14,
@@ -312,7 +306,7 @@ impl Tetromino {
     }
 
     pub(crate) fn check_downable(&self) -> bool {
-        self.check(TETRIS_PIECE_INIT_POINT, is_color_point)
+        self.check(PIECE_INIT_POINT, is_color_point)
     }
 
     pub(crate) fn check_swappable(&self, curr_piece_center: Point) -> bool {
@@ -322,16 +316,6 @@ impl Tetromino {
                 NUM_PLAYGROUND_COLS as i16 - 1,
             )
         })
-        // for offset in self.data() {
-        //     let target_point = curr_piece_center + offset;
-        //     if target_point.out_of_bound(
-        //         NUM_PLAYGROUND_ROWS as i16 - 1,
-        //         NUM_PLAYGROUND_COLS as i16 - 1,
-        //     ) {
-        //         return false;
-        //     }
-        // }
-        // true
     }
 
     #[inline(always)]
@@ -353,20 +337,6 @@ impl Tetromino {
         })
     }
 
-    // pub(crate) fn check_movable(tetromino: Tetromino, point: Point) -> bool {
-    //     for offset in tetromino.data() {
-    //         let curr_point = point + offset;
-    //         // out of bound check and color pixel check
-    //         if curr_point.out_of_bound(
-    //             NUM_PLAYGROUND_ROWS as i16 - 1,
-    //             NUM_PLAYGROUND_COLS as i16 - 1,
-    //         ) || Self::playground()[curr_point].is_color_point()
-    //         {
-    //             return false;
-    //         }
-    //     }
-    //     true
-    // }
 }
 
 #[inline(always)]

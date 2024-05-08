@@ -3,10 +3,7 @@ fn dest_map_path() -> std::path::PathBuf {
     std::path::PathBuf::from("target/debug/tetris.map")
 }
 
-// #[cfg(not(debug_assertions))]
-// fn dest_map_path() -> std::path::PathBuf {
-//     std::path::PathBuf::from("target/release/tetris.map")
-// }
+
 #[cfg(debug_assertions)]
 fn copy_map_file() {
     let src_map = std::path::Path::new("src/tetris.map");

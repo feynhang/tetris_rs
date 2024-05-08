@@ -4,7 +4,7 @@ use crate::{
         point::{Offset, Point, PointState},
         tetromino::Tetromino,
     },
-    const_vals::TETRIS_PIECE_INIT_POINT,
+    const_vals::PIECE_INIT_POINT,
 };
 
 use super::tetromino::TetroState;
@@ -29,7 +29,7 @@ impl Piece {
     pub(crate) fn new(t: Tetromino) -> Self {
         Self {
             tetromino: t,
-            center: TETRIS_PIECE_INIT_POINT,
+            center: PIECE_INIT_POINT,
             status: Default::default(),
             locking: false,
         }
@@ -88,11 +88,6 @@ impl Piece {
             PieceState::Ghost => self.tetromino.shadow_point_state(),
             PieceState::Unavailable => self.tetromino.unavailable_point_state(),
         }
-        //  {
-        //     self.tetromino.color().to_shadow_mino()
-        // } else {
-        //     self.tetromino.color().to_color_mino()
-        // }
     }
 
     pub(crate) fn down(&mut self) -> bool {

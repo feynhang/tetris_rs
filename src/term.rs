@@ -40,7 +40,6 @@ pub(crate) fn hide_cursor() {
 pub(crate) trait TermColorful {
     fn with_bg(&self, color_id: u8) -> String;
     fn with_fg(&self, color_id: u8) -> String;
-    // fn with_reset_color(&self) -> String;
 }
 
 impl<T> TermColorful for T
@@ -49,28 +48,10 @@ where
 {
     fn with_bg(&self, color_id: u8) -> String {
         format!("{}48;5;{}m{}{}", CSI, color_id, self, RESET_COLOR)
-        // console::style(self)
-        //     .bg(console::Color::Color256(color_id))
-        //     .to_string()
     }
 
     fn with_fg(&self, color_id: u8) -> String {
         format!("{}38;5;{}m{}{}", CSI, color_id, self, RESET_COLOR)
-        // console::style(self)
-        //     .fg(console::Color::Color256(color_id))
-        //     .to_string()
     }
 
-    // fn with_reset_color(&self) -> String {
-    //     self.to_string() + "\x1b[0m"
-    // }
 }
-
-// void add_fg(std::ostream& out, int color_id)
-// {
-//     out << CSI << "38;5;" << color_id << 'm';
-// }
-
-// void set_bg_color(int color_id) {
-//     std::cout << CSI << "48;5;" << color_id << 'm';
-// }

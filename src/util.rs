@@ -36,37 +36,8 @@ pub fn fps_count() -> u32 {
     }
 }
 
-// #[allow(unused)]
-// pub fn slice_to_string<T>(slice: &[T]) -> String
-// where
-//     T: std::fmt::Debug,
-// {
-//     let mut s = "[".to_owned();
-//     for t in slice {
-//         s.push_str(&format!("\n{:?}", t));
-//     }
-//     s += "\n]";
-//     s
-// }
 
 #[inline(always)]
 pub fn rand_in_range(range: std::ops::Range<usize>) -> usize {
     thread_rng().gen_range(range)
 }
-
-
-// #[cfg(feature = "with_log")]
-// pub fn src_path() -> std::path::PathBuf {
-//     let mut project_dir = project_path();
-//     project_dir.push("src");
-//     project_dir
-// }
-
-// #[cfg(feature = "with_log")]
-// pub fn project_path() -> std::path::PathBuf {
-//     let exe_dir = std::env::current_dir().unwrap();
-//     let exe_dir_s = exe_dir.to_str().unwrap();
-//     exe_dir_s[0..exe_dir_s.find("target").unwrap()]
-//         .parse()
-//         .unwrap()
-// }
