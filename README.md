@@ -1,2 +1,1 @@
-# tetris_rs
-implement a tetris game with rust
+# Tetris game on console, implemented by rust

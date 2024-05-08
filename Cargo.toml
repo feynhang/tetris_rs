@@ -1,0 +1,20 @@
+[package]
+name = "tetris_rs"
+version = "0.1.0"
+edition = "2021"
+authors = ["Feyn Hang"]
+license = "MIT"
+readme = "README.md"
+
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[features]
+test_wallkick = []
+with_log = []
+
+[dependencies]
+console = "0.15.8"
+chrono = "*"
+rand = { version = "*", features = ["small_rng"]}
+
