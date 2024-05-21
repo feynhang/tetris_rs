@@ -2,7 +2,7 @@
 name = "tetris_rs"
 version = "0.1.0"
 edition = "2021"
-authors = ["Feyn Hang"]
+authors = ["feynhang"]
 license = "MIT"
 readme = "README.md"
 
