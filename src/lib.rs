@@ -7,7 +7,7 @@ use base::{
     tetromino::{TetroState, Tetromino, TetrominoColor},
 };
 
-use const_vals::{GAMEOVER_TEXT_POINT, GAMEOVER_WINDOW, NUM_PLAYGROUND_ROWS, RESTART_TIP_POINT};
+use const_vals::{GAMEOVER_TEXT_POINT, GAMEOVER_WINDOW, NUM_PLAYFIELD_ROWS, RESTART_TIP_POINT};
 use fields::{info, next_queue, play, status};
 use style::BorderStyle;
 use term::TermColorful;
@@ -247,7 +247,7 @@ impl Tetris {
     fn clear_line(&mut self) {
         let mut line_count = 0;
         let mut y = 0;
-        while y < NUM_PLAYGROUND_ROWS {
+        while y < NUM_PLAYFIELD_ROWS {
             let mut full = true;
             for cell in play::playfield()[y] {
                 if let PointState::Empty = cell {
@@ -256,7 +256,7 @@ impl Tetris {
                 }
             }
             if full {
-                play::remove_and_push_to_playground(y);
+                play::remove_and_push_to_playfield(y);
                 line_count += 1;
             } else {
                 y += 1

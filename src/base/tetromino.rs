@@ -1,6 +1,6 @@
 use crate::{
     base::point::{Offset, Point, PointState},
-    const_vals::{NUM_PLAYGROUND_COLS, NUM_PLAYGROUND_ROWS, PIECE_INIT_POINT},
+    const_vals::{NUM_PLAYFIELD_COLS, NUM_PLAYFIELD_ROWS, PIECE_INIT_POINT},
     fields::play,
 };
 
@@ -312,8 +312,8 @@ impl Tetromino {
     pub(crate) fn check_swappable(&self, curr_piece_center: Point) -> bool {
         self.check(curr_piece_center, |point| {
             point.out_of_bound(
-                NUM_PLAYGROUND_ROWS as i16 - 1,
-                NUM_PLAYGROUND_COLS as i16 - 1,
+                NUM_PLAYFIELD_ROWS as i16 - 1,
+                NUM_PLAYFIELD_COLS as i16 - 1,
             )
         })
     }
@@ -331,8 +331,8 @@ impl Tetromino {
     pub(crate) fn check_movable(&self, base_point: Point) -> bool {
         self.check(base_point, |point| {
             point.out_of_bound(
-                NUM_PLAYGROUND_ROWS as i16 - 1,
-                NUM_PLAYGROUND_COLS as i16 - 1,
+                NUM_PLAYFIELD_ROWS as i16 - 1,
+                NUM_PLAYFIELD_COLS as i16 - 1,
             ) || is_color_point(point)
         })
     }

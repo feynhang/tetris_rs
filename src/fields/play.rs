@@ -6,14 +6,14 @@ use crate::{
         piece::{Piece, PieceState},
         point::PointState,
     },
-    const_vals::{NUM_PLAYGROUND_COLS, NUM_PLAYGROUND_ROWS},
+    const_vals::{NUM_PLAYFIELD_COLS, NUM_PLAYFIELD_ROWS},
     draw,
 };
 
-pub(crate) const NUM_FRAME_ROWS: usize = NUM_PLAYGROUND_ROWS - 2;
+pub(crate) const NUM_FRAME_ROWS: usize = NUM_PLAYFIELD_ROWS - 2;
 static mut FRAME_DUR: Option<Duration> = None;
 static mut FRAME: &mut GameMatrix = &mut matrix::default(PointState::Empty);
-static mut PLAYGROUND: &mut GameMatrix = &mut matrix::default(PointState::Empty);
+static mut PLAYFIELD: &mut GameMatrix = &mut matrix::default(PointState::Empty);
 
 pub(crate) fn frame_duration() -> Duration {
     unsafe {
@@ -32,7 +32,7 @@ pub(crate) fn set_frame_duration(level: u64) {
 }
 
 pub(crate) fn playfield() -> &'static mut GameMatrix {
-    unsafe { PLAYGROUND }
+    unsafe { PLAYFIELD }
 }
 
 pub(crate) fn buffer() -> &'static mut GameMatrix {
@@ -45,7 +45,7 @@ pub(crate) fn current_frame() -> &'static mut GameMatrix {
 }
 
 pub(crate) fn update_frame(piece: &Piece) {
-    sync_frame_to_playground();
+    sync_frame_to_playfield();
     // update color piece to current frame
     piece.merge_to_matrix(current_frame());
     let mut ghost = piece.clone();
@@ -55,25 +55,25 @@ pub(crate) fn update_frame(piece: &Piece) {
     ghost.merge_to_matrix(current_frame());
 }
 
-pub(crate) fn remove_and_push_to_playground(index: usize) {
+pub(crate) fn remove_and_push_to_playfield(index: usize) {
     unsafe {
         let ptr = playfield().as_mut_ptr().add(index);
-        std::ptr::copy(ptr.add(1), ptr, NUM_PLAYGROUND_ROWS - index - 1);
-        *playfield().get_unchecked_mut(NUM_PLAYGROUND_ROWS - 1) = Default::default();
+        std::ptr::copy(ptr.add(1), ptr, NUM_PLAYFIELD_ROWS - index - 1);
+        *playfield().get_unchecked_mut(NUM_PLAYFIELD_ROWS - 1) = Default::default();
     }
 }
 
 pub(crate) fn reset() {
     unsafe {
         FRAME.fill_with(Default::default);
-        PLAYGROUND.fill_with(Default::default);
+        PLAYFIELD.fill_with(Default::default);
         FRAME_DUR = Some(get_frame_duration(1));
         clear_buffer();
     }
 }
 
 pub(crate) fn clear_buffer() {
-    buffer().fill([PointState::Uninit; NUM_PLAYGROUND_COLS])
+    buffer().fill([PointState::Uninit; NUM_PLAYFIELD_COLS])
 }
 
 pub(crate) fn render(reseted: bool) {
@@ -95,8 +95,8 @@ pub(crate) fn render(reseted: bool) {
 }
 
 #[inline(always)]
-fn sync_frame_to_playground() {
-    unsafe { *FRAME = *PLAYGROUND }
+fn sync_frame_to_playfield() {
+    unsafe { *FRAME = *PLAYFIELD }
 }
 
 #[inline(always)]

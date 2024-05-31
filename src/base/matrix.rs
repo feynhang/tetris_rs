@@ -1,6 +1,6 @@
 use std::ops::{Index, IndexMut};
 
-use crate::const_vals::{NUM_PLAYGROUND_COLS, NUM_PLAYGROUND_ROWS};
+use crate::const_vals::{NUM_PLAYFIELD_COLS, NUM_PLAYFIELD_ROWS};
 
 use super::point::{Point, PointState};
 
@@ -13,7 +13,7 @@ pub(crate) type MatrixSlice<'a, const SIZE_COLS: usize> = &'a [Columns<SIZE_COLS
 
 pub(crate) type MutMatrixSlice<'a, const SIZE_COLS: usize> = &'a mut [Columns<SIZE_COLS>];
 
-pub(crate) type GameMatrix = Matrix<NUM_PLAYGROUND_ROWS, NUM_PLAYGROUND_COLS>;
+pub(crate) type GameMatrix = Matrix<NUM_PLAYFIELD_ROWS, NUM_PLAYFIELD_COLS>;
 
 pub(crate) const fn default<const SIZE_ROWS: usize, const SIZE_COLS: usize>(
     point_state: PointState,

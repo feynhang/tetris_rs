@@ -7,8 +7,8 @@ pub(crate) const NUM_NEXTS_COLS: usize = 6;
 pub(crate) const NUM_NEXTS_ROWS: usize = 15;
 pub(crate) const NUM_HOLD_ROWS: usize = 4;
 pub(crate) const NUM_HOLD_COLS: usize = 7;
-pub(crate) const NUM_PLAYGROUND_ROWS: usize = 22;
-pub(crate) const NUM_PLAYGROUND_COLS: usize = 10;
+pub(crate) const NUM_PLAYFIELD_ROWS: usize = 22;
+pub(crate) const NUM_PLAYFIELD_COLS: usize = 10;
 
 
 pub(crate) const FRAME_INIT_POINT: Point = Point::new_const(2, 11);
