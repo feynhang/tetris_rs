@@ -5,22 +5,16 @@ use crate::{
 };
 type HoldMatrix = crate::base::matrix::Matrix<NUM_HOLD_ROWS, NUM_HOLD_COLS>;
 static mut HOLD: &mut Option<Tetromino> = &mut None;
-static mut SWAPPED: bool = false;
+static mut HOLDING: bool = false;
 static mut BUFFER: &mut HoldMatrix = &mut crate::base::matrix::default(PointState::Uninit);
 
-pub(crate) fn swapped() -> bool {
-    unsafe { SWAPPED }
+pub(crate) fn holding() -> bool {
+    unsafe { HOLDING }
 }
 
-pub(crate) fn set_swapped() {
+pub(crate) fn set_holding(value: bool) {
     unsafe {
-        SWAPPED = true;
-    }
-}
-
-pub(crate) fn reset_swapped() {
-    unsafe {
-        SWAPPED = false;
+        HOLDING = value;
     }
 }
 
@@ -35,7 +29,7 @@ pub(crate) fn hold() -> &'static Option<Tetromino> {
 pub(crate) fn reset() {
     unsafe {
         *HOLD = None;
-        SWAPPED = false;
+        HOLDING = false;
         BUFFER.fill([PointState::Uninit; NUM_HOLD_COLS]);
     }
 }
@@ -47,7 +41,7 @@ pub(crate) fn render() {
             *tetromino,
             crate::const_vals::HOLD_TETRO_CENTER,
         );
-        if swapped() {
+        if holding() {
             piece.set_status(crate::base::piece::PieceState::Unavailable);
         }
         piece.merge_to_matrix(&mut hold_matrix);

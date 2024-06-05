@@ -158,7 +158,7 @@ impl Tetris {
                     return;
                 }
                 self.current_piece.set_locking(false);
-                hold_chamber::reset_swapped();
+                hold_chamber::set_holding(false);
                 self.reseted = false;
             } else {
                 self.current_piece.set_locking(true);
@@ -167,7 +167,7 @@ impl Tetris {
     }
 
     fn swap_hold(&mut self) {
-        if hold_chamber::swapped() {
+        if hold_chamber::holding() {
             return;
         }
         let mut swappable = false;
@@ -190,7 +190,7 @@ impl Tetris {
         } else if !self.try_set_current_piece(next_queue::take_tetromino()) {
             return;
         }
-        hold_chamber::set_swapped();
+        hold_chamber::set_holding(true);
     }
 
     #[inline(always)]

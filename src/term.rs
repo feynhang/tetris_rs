@@ -4,8 +4,8 @@ use std::{
     sync::OnceLock,
 };
 
-pub(crate) const CSI: &str = "\u{1b}[";
-const RESET_COLOR: &str = "\u{1b}[0m";
+pub(crate) const CSI: &str = "\u{001b}[";
+const RESET_COLOR: &str = "\u{001b}[0m";
 
 pub(crate) fn stdout() -> &'static mut std::io::BufWriter<Stdout> {
     static mut BUF_OUT: OnceLock<std::io::BufWriter<Stdout>> = OnceLock::new();
