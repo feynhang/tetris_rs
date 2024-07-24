@@ -19,13 +19,13 @@ pub(crate) struct Offset {
     pub(crate) col_offset: i16,
 }
 
-impl Sub<Offset> for Offset {
+impl Sub<(i16, i16)> for Offset {
     type Output = Self;
 
-    fn sub(self, rhs: Offset) -> Self::Output {
+    fn sub(self, (col_offset, row_offset): (i16, i16)) -> Self::Output {
         Self {
-            row_offset: self.row_offset - rhs.row_offset,
-            col_offset: self.col_offset - rhs.col_offset,
+            row_offset: self.row_offset - row_offset,
+            col_offset: self.col_offset - col_offset,
         }
     }
 }
@@ -53,6 +53,16 @@ impl Offset {
             row_offset,
             col_offset,
         }
+    }
+
+    pub(crate) const fn from_pair((col_offset, row_offset): (i16, i16)) -> Self {
+        Self::new(col_offset, row_offset)
+    }
+}
+
+impl From<(i16, i16)> for Offset {
+    fn from(pair: (i16, i16)) -> Self {
+        Self::from_pair(pair)
     }
 }
 

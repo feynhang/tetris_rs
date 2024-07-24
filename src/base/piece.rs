@@ -66,7 +66,7 @@ impl Piece {
     ) {
         let center = self.center;
         for offset in self.tetromino.data() {
-            let curr_point = center + offset;
+            let curr_point = center + offset.into();
 
             if let PointState::Empty = mut_matrix_slice[curr_point] {
                 mut_matrix_slice[curr_point] = self.to_point_state();
@@ -106,7 +106,7 @@ impl Piece {
         new_tetro.set_state(new_tetro.state() + add_state);
         let old_offsets = self.tetromino.kick_offsets();
         for (idx, new_offset) in new_tetro.kick_offsets().iter().enumerate() {
-            let check_offset = *new_offset - old_offsets[idx];
+            let check_offset = Offset::from_pair(*new_offset) - old_offsets[idx];
             if new_tetro.check_movable(self.center + check_offset) {
                 self.tetromino = new_tetro;
                 self.center += check_offset;

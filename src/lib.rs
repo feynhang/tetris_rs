@@ -166,7 +166,7 @@ impl Tetris {
         }
     }
 
-    fn swap_hold(&mut self) {
+    fn exchange_hold(&mut self) {
         if hold_chamber::holding() {
             return;
         }

@@ -7,124 +7,123 @@ use crate::{
 const NUM_STATES: usize = 4;
 const NUM_DATAS: usize = 4;
 /// Represent partial tetromino datas except zero offset (which x = 0, y = 0)
-pub(crate) type PartData = [Offset; 3];
+pub(crate) type PartData = [(i16, i16); 3];
 pub(crate) type TetroDatas = [PartData; NUM_STATES];
-pub(crate) type TetroKickOffsets = [Offset; 5];
+pub(crate) type TetroKickOffsets = [(i16, i16); 5];
 pub(crate) type KickOffsets = [TetroKickOffsets; 4];
+const ZERO_PAIR: (i16, i16) = (0, 0);
+
 
 const I_DATAS: TetroDatas = [
-    [Offset::new(-1, 0), Offset::new(1, 0), Offset::new(2, 0)],
-    [Offset::new(0, 1), Offset::new(0, -1), Offset::new(0, -2)],
-    [Offset::new(-2, 0), Offset::new(-1, 0), Offset::new(1, 0)],
-    [Offset::new(0, 2), Offset::new(0, 1), Offset::new(0, -1)],
+    [(-1, 0), (1, 0), (2, 0)],
+    [(0, 1), (0, -1), (0, -2)],
+    [(-2, 0), (-1, 0), (1, 0)],
+    [(0, 2), (0, 1), (0, -1)],
 ];
 const J_DATAS: TetroDatas = [
-    [Offset::new(-1, 1), Offset::new(-1, 0), Offset::new(1, 0)],
-    [Offset::new(1, 1), Offset::new(0, 1), Offset::new(0, -1)],
-    [Offset::new(-1, 0), Offset::new(1, 0), Offset::new(1, -1)],
-    [Offset::new(0, 1), Offset::new(-1, -1), Offset::new(0, -1)],
+    [(-1, 1), (-1, 0), (1, 0)],
+    [(1, 1), (0, 1), (0, -1)],
+    [(-1, 0), (1, 0), (1, -1)],
+    [(0, 1), (-1, -1), (0, -1)],
 ];
 const L_DATAS: TetroDatas = [
-    [Offset::new(-1, 0), Offset::new(1, 0), Offset::new(1, 1)],
-    [Offset::new(0, 1), Offset::new(0, -1), Offset::new(1, -1)],
-    [Offset::new(-1, -1), Offset::new(-1, 0), Offset::new(1, 0)],
-    [Offset::new(-1, 1), Offset::new(0, 1), Offset::new(0, -1)],
+    [(-1, 0), (1, 0), (1, 1)],
+    [(0, 1), (0, -1), (1, -1)],
+    [(-1, -1), (-1, 0), (1, 0)],
+    [(-1, 1), (0, 1), (0, -1)],
 ];
 const O_DATAS: TetroDatas = [
-    [Offset::new(0, 1), Offset::new(1, 1), Offset::new(1, 0)],
-    [Offset::new(0, -1), Offset::new(1, 0), Offset::new(1, -1)],
-    [Offset::new(-1, -1), Offset::new(-1, 0), Offset::new(0, -1)],
-    [Offset::new(-1, 1), Offset::new(-1, 0), Offset::new(0, 1)],
+    [(0, 1), (1, 1), (1, 0)],
+    [(0, -1), (1, 0), (1, -1)],
+    [(-1, -1), (-1, 0), (0, -1)],
+    [(-1, 1), (-1, 0), (0, 1)],
 ];
 const S_DATAS: TetroDatas = [
-    [Offset::new(-1, 0), Offset::new(0, 1), Offset::new(1, 1)],
-    [Offset::new(0, 1), Offset::new(1, 0), Offset::new(1, -1)],
-    [Offset::new(-1, -1), Offset::new(1, 0), Offset::new(0, -1)],
-    [Offset::new(-1, 1), Offset::new(-1, 0), Offset::new(0, -1)],
+    [(-1, 0), (0, 1), (1, 1)],
+    [(0, 1), (1, 0), (1, -1)],
+    [(-1, -1), (1, 0), (0, -1)],
+    [(-1, 1), (-1, 0), (0, -1)],
 ];
 const T_DATAS: TetroDatas = [
-    [Offset::new(-1, 0), Offset::new(0, 1), Offset::new(1, 0)],
-    [Offset::new(0, 1), Offset::new(1, 0), Offset::new(0, -1)],
-    [Offset::new(-1, 0), Offset::new(1, 0), Offset::new(0, -1)],
-    [Offset::new(-1, 0), Offset::new(0, 1), Offset::new(0, -1)],
+    [(-1, 0), (0, 1), (1, 0)],
+    [(0, 1), (1, 0), (0, -1)],
+    [(-1, 0), (1, 0), (0, -1)],
+    [(-1, 0), (0, 1), (0, -1)],
 ];
 const Z_DATAS: TetroDatas = [
-    [Offset::new(-1, 1), Offset::new(0, 1), Offset::new(1, 0)],
-    [Offset::new(1, 0), Offset::new(1, 1), Offset::new(0, -1)],
-    [Offset::new(-1, 0), Offset::new(0, -1), Offset::new(1, -1)],
-    [Offset::new(-1, -1), Offset::new(-1, 0), Offset::new(0, 1)],
+    [(-1, 1), (0, 1), (1, 0)],
+    [(1, 0), (1, 1), (0, -1)],
+    [(-1, 0), (0, -1), (1, -1)],
+    [(-1, -1), (-1, 0), (0, 1)],
 ];
-const ZERO_OFFSET: Offset = Offset {
-    row_offset: 0,
-    col_offset: 0,
-};
+
 
 const ZERO_TETRO_OFFSET: TetroKickOffsets = [
-    ZERO_OFFSET,
-    ZERO_OFFSET,
-    ZERO_OFFSET,
-    ZERO_OFFSET,
-    ZERO_OFFSET,
+    ZERO_PAIR,
+    ZERO_PAIR,
+    ZERO_PAIR,
+    ZERO_PAIR,
+    ZERO_PAIR,
 ];
 
 /// J,L,S,T,Z Tetromino wall kick offsets
 const COMMON5_OFFSETS: KickOffsets = [
     ZERO_TETRO_OFFSET,
     [
-        ZERO_OFFSET,
-        Offset::new(1, 0),
-        Offset::new(1, -1),
-        Offset::new(0, 2),
-        Offset::new(1, 2),
+        ZERO_PAIR,
+        (1, 0),
+        (1, -1),
+        (0, 2),
+        (1, 2),
     ],
     ZERO_TETRO_OFFSET,
     [
-        ZERO_OFFSET,
-        Offset::new(-1, 0),
-        Offset::new(-1, -1),
-        Offset::new(0, 2),
-        Offset::new(-1, 2),
+        ZERO_PAIR,
+        (-1, 0),
+        (-1, -1),
+        (0, 2),
+        (-1, 2),
     ],
 ];
 
 /// I Tetromino wall kick offsets
 const I_OFFSETS: KickOffsets = [
     [
-        ZERO_OFFSET,
-        Offset::new(-1, 0),
-        Offset::new(2, 0),
-        Offset::new(-1, 0),
-        Offset::new(2, 0),
+        ZERO_PAIR,
+        (-1, 0),
+        (2, 0),
+        (-1, 0),
+        (2, 0),
     ],
     [
-        Offset::new(-1, 0),
-        ZERO_OFFSET,
-        ZERO_OFFSET,
-        Offset::new(0, 1),
-        Offset::new(0, -2),
+        (-1, 0),
+        ZERO_PAIR,
+        ZERO_PAIR,
+        (0, 1),
+        (0, -2),
     ],
     [
-        Offset::new(-1, 1),
-        Offset::new(1, 1),
-        Offset::new(-2, 1),
-        Offset::new(1, 0),
-        Offset::new(-2, 0),
+        (-1, 1),
+        (1, 1),
+        (-2, 1),
+        (1, 0),
+        (-2, 0),
     ],
     [
-        Offset::new(0, 1),
-        Offset::new(0, 1),
-        Offset::new(0, 1),
-        Offset::new(0, -1),
-        Offset::new(0, 2),
+        (0, 1),
+        (0, 1),
+        (0, 1),
+        (0, -1),
+        (0, 2),
     ],
 ];
 
 /// O tetromino wall kick offsets (**Important: this data type is not same to other kind tetromino**)
-const O_OFFSETS: [[Offset; 1]; 4] = [
-    [ZERO_OFFSET],
-    [Offset::new(0, -1)],
-    [Offset::new(-1, -1)],
-    [Offset::new(-1, 0)],
+const O_OFFSETS: [[(i16, i16); 1]; 4] = [
+    [ZERO_PAIR],
+    [(0, -1)],
+    [(-1, -1)],
+    [(-1, 0)],
 ];
 
 impl<const NUM_OFFSETS: usize> std::ops::Index<TetroState> for [[Offset; NUM_OFFSETS]; 4] {
@@ -284,24 +283,24 @@ impl Tetromino {
         PointState::Color(TetrominoColor::White)
     }
 
-    pub(crate) fn data(&self) -> [Offset; NUM_DATAS] {
+    pub(crate) fn data(&self) -> [(i16, i16); NUM_DATAS] {
         let part_data = self.kind.part_data(self.state);
-        [ZERO_OFFSET, part_data[0], part_data[1], part_data[2]]
+        [ZERO_PAIR, part_data[0], part_data[1], part_data[2]]
     }
 
     pub(crate) fn color(&self) -> TetrominoColor {
         self.kind.color()
     }
 
-    pub(crate) fn kick_offsets(&self) -> &[Offset] {
+    pub(crate) fn kick_offsets(&self) -> &[(i16, i16)] {
         match self.kind {
             TetrominoKind::J
             | TetrominoKind::L
             | TetrominoKind::S
             | TetrominoKind::T
-            | TetrominoKind::Z => &COMMON5_OFFSETS[self.state],
-            TetrominoKind::I => &I_OFFSETS[self.state],
-            TetrominoKind::O => &O_OFFSETS[self.state],
+            | TetrominoKind::Z => &COMMON5_OFFSETS[self.state as usize],
+            TetrominoKind::I => &I_OFFSETS[self.state as usize],
+            TetrominoKind::O => &O_OFFSETS[self.state as usize],
         }
     }
 
@@ -321,7 +320,7 @@ impl Tetromino {
     #[inline(always)]
     fn check(&self, base_point: Point, predicate: fn(Point) -> bool) -> bool {
         for offset in self.data() {
-            if predicate(base_point + offset) {
+            if predicate(base_point + Offset::from_pair(offset)) {
                 return false;
             }
         }

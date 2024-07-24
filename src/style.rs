@@ -51,13 +51,13 @@ const ROUNDED_LINE: StyleData = StyleData {
     h_dash: "──",
 };
 
-///`Style1`: Default style which using single line: ┌ ┐ │ └ ┘ ──
+///`SingleLine`: Default style which using single line: ┌ ┐ │ └ ┘ ──
 ///
-///`Style2`: The style using double line: ╔ ╗ ║ ╚ ╝ ══
+///`DoubleLine`: The style using double line: ╔ ╗ ║ ╚ ╝ ══
 ///
-///`Style3`: The style using thicker line: ┏ ┓ ┃ ┗ ┛ ━━
+///`ThickerLine`: The style using thicker line: ┏ ┓ ┃ ┗ ┛ ━━
 ///
-/// `Style4`: The style using single line and rounded corners: ╭ ╮ │ ╰ ╯ ──
+/// `RoundedCorners`: The style using single line and rounded corners: ╭ ╮ │ ╰ ╯ ──
 #[derive(Debug, Clone, Copy, Default)]
 pub enum BorderStyle {
     #[default]

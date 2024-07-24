@@ -91,7 +91,7 @@ fn quit() {
 }
 
 fn hold() {
-    Tetris::instance().swap_hold();
+    Tetris::instance().exchange_hold();
 }
 
 fn reset() {
